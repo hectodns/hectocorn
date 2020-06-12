@@ -1,0 +1,13 @@
+#!/bin/env ruby
+
+
+$stderr.puts 'starting ...'
+$LOAD_PATH.unshift("../hectocorn/lib")
+
+require 'hectocorn'
+require 'dnsruby'
+
+Hectocorn.infinite_loop do |req, resp|
+  rr = Dnsruby::RR.create({name: "google.com", type: "A", address: "10.0.0.2"})
+  resp.msg.add_answer(rr)
+end

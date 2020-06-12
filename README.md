@@ -1,2 +1,1 @@
-# hectocorn
-Hecto DNS server toolkit
+# hectocorn - Hecto DNS server toolkit
