@@ -3,10 +3,12 @@ require 'json'
 
 module Hectocorn
   require 'hectocorn/action'
+  require 'hectocorn/logger'
 
   HECTODNS_ENVIRON_VAR= "hectodns.options"
 
   @@opts = nil
+  @@logger = nil
 
   def self.options
     @@opts = @@opts || self.parse_options
@@ -21,6 +23,11 @@ module Hectocorn
     while true
       action.run
     end
+  end
+
+  def self.logger
+    @@logger = @@logger || Hectocorn::Logger.new
+    return @@logger
   end
 
 private

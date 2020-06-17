@@ -1,13 +1,14 @@
 #!/bin/env ruby
 
-
-$stderr.puts 'starting ...'
 $LOAD_PATH.unshift("../hectocorn/lib")
+
 
 require 'hectocorn'
 require 'dnsruby'
 
-$stderr.puts Hectocorn.options["keyfile"]
+Hectocorn.logger.info "starting ..."
+Hectocorn.logger.debug "keyfile is #{Hectocorn.options["keyfile"]}"
+
 
 Hectocorn.infinite_loop do |req, resp|
   rr = Dnsruby::RR.create({name: "google.com", type: "A", address: "10.0.0.2"})
