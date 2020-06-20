@@ -78,8 +78,12 @@ class Hectocorn::Action
 protected
 
   def parse_request
-    httpreq = WEBrick::HTTPRequest.new(WEBrick::Config::HTTP)
-    httpreq.parse(@input)
+    begin
+      httpreq = WEBrick::HTTPRequest.new(WEBrick::Config::HTTP)
+      httpreq.parse(@input)
+    rescue WEBrick::HTTPStatus::RequestTimeout
+      retry
+    end
 
     # Decode DNS request from the body of the HTTP request.
     msg = DNS::Message::decode(httpreq.body)
