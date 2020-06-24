@@ -14,9 +14,37 @@ DNS = Dnsruby
 class Hectocorn::Request
   attr_accessor :header, :msg
 
+  attr_reader :remote_addr, :local_addr
+
   def initialize(header, msg)
-    @header = header
+    @header = header || {}
     @msg = msg
+
+    parse_header!
+  end
+
+private
+  def parse_header!
+    @remote_addr, @local_addr = parse_forwarded(@header)
+  end
+
+  def parse_forwarded(header)
+    raw_header = header.fetch("forwarded", [""]).first
+    raw_directives = raw_header.split(";")
+
+    # Each directive in the "Forwarded" header, is represented
+    # by a key followed by equal sign and quotted value.
+    directives = raw_directives.to_h do |dir|
+      dir.split("=").map { |s| unquote(s) }
+    end
+
+    # Remote and loca addresses represnted by "for" and "by"
+    # directive respectively.
+    return directives["for"], directives["by"]
+  end
+
+  def unquote(str)
+    return str.delete_prefix('"').delete_suffix('"') if str
   end
 end
 

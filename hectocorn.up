@@ -11,6 +11,9 @@ Hectocorn.logger.debug "keyfile is #{Hectocorn.options["keyfile"]}"
 
 
 Hectocorn.infinite_loop do |req, resp|
+  Hectocorn.logger.info "remote address #{req.remote_addr}"
+  Hectocorn.logger.info "local addres #{req.local_addr}"
+
   rr = Dnsruby::RR.create({name: "google.com", type: "A", address: "10.0.0.2"})
   resp.msg.add_answer(rr)
 end
